@@ -10,6 +10,7 @@ import ManageExpenseScreen from "./Screens/ManageExpenseScreen";
 import { Provider } from "react-redux";
 import { store } from "./Store/Store";
 import { GlobalStyles } from "./Constants/styles";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,8 +24,36 @@ export default function App() {
           tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         }}
       >
-        <Tab.Screen name="AllExpenses" component={AllExpensesScreen} />
-        <Tab.Screen name="RecentExpenses" component={RecentExpensesScreen} />
+        <Tab.Screen
+          name="AllExpenses"
+          component={AllExpensesScreen}
+          options={{
+            tabBarIcon: () => {
+              return (
+                <Ionicons
+                  name="calendar-outline"
+                  size={32}
+                  color={GlobalStyles.colors.accent500}
+                ></Ionicons>
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="RecentExpenses"
+          component={RecentExpensesScreen}
+          options={{
+            tabBarIcon: () => {
+              return (
+                <Ionicons
+                  name="hourglass-outline"
+                  size={32}
+                  color={GlobalStyles.colors.accent500}
+                ></Ionicons>
+              );
+            },
+          }}
+        />
       </Tab.Navigator>
     );
   }

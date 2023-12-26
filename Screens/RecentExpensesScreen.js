@@ -1,14 +1,32 @@
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import Expense from "../Component/Expense";
+import { useSelector } from "react-redux";
 
-const RecentExpensesScreen = () => {
+const AllExpensesScreen = () => {
+  const expenses = useSelector((state) => state.expense.expenses);
+  const recentExpenses = [expenses[0], expenses[1], expenses[2]];
+  function renderExpenses({ item }) {
+    return <Expense key={item.title} title={item.title} cost={item.cost} />;
+  }
   return (
-    <View>
-      <Text>RecentExpensesScreen</Text>
+    <View style={styles.screen}>
+      <FlatList
+        data={recentExpenses}
+        keyExtractor={(expense) => expense.title}
+        renderItem={renderExpenses}
+        render
+      />
     </View>
   );
 };
 
-export default RecentExpensesScreen;
+export default AllExpensesScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 30,
+  },
+});

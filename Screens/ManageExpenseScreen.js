@@ -1,42 +1,77 @@
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { addExpense } from "../Store/ExpensesSlice";
+import { addExpense, editExpense, removeExpense } from "../Store/ExpensesSlice";
 
-const ManageExpenseScreen = () => {
+const ManageExpenseScreen = ({ route }) => {
+  const [title, setTitle] = useState();
+  const [cost, setCost] = useState();
+  const [expense, setExpense] = useState(null);
+  const [isNew, setIsNew] = useState(true);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState();
-  const [cost, setCost] = useState();
-
   function cancelHandler() {
+    console.log("t:", title);
+    console.log("c:", cost);
     navigation.goBack();
+  }
+
+  function deleteHandler() {
+    navigation.goBack();
+    dispatch(removeExpense(expense));
+  }
+
+  function editHandler() {
+    navigation.goBack();
+    dispatch(editExpense({ oldExpense: expense, newExpense: { title, cost } }));
   }
 
   function addExpenseHandler() {
     navigation.goBack();
     dispatch(addExpense({ title, cost }));
   }
+
+  useEffect(() => {
+    if (route.params) {
+      setIsNew(false);
+      setExpense({ title: route.params.title, cost: route.params.cost });
+      setTitle(route.params.title);
+      setCost(route.params.cost);
+    }
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[styles.input, { width: "70%" }]}
-          onChangeText={(newTitle) => setTitle(newTitle)}
-        ></TextInput>
-        <TextInput
-          style={[styles.input, { width: "20%" }]}
-          keyboardType="numeric"
-          onChangeText={(newCost) => setCost(newCost)}
-        ></TextInput>
+    <>
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, { width: "70%" }]}
+            onChangeText={(newTitle) => setTitle(newTitle)}
+          >
+            {title}
+          </TextInput>
+          <TextInput
+            style={[styles.input, { width: "20%" }]}
+            keyboardType="numeric"
+            onChangeText={(newCost) => setCost(newCost)}
+          >
+            {cost}
+          </TextInput>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            title={isNew ? "Cancel" : "Delete"}
+            onPress={isNew ? cancelHandler : deleteHandler}
+          ></Button>
+          <Button
+            title={isNew ? "Add" : "Edit"}
+            onPress={isNew ? addExpenseHandler : editHandler}
+          ></Button>
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <Button title="Cancel" onPress={cancelHandler}></Button>
-        <Button title="Add" onPress={addExpenseHandler}></Button>
-      </View>
-    </View>
+    </>
   );
 };
 

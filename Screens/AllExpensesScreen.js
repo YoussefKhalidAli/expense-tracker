@@ -1,21 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Expense from "../Component/Expense";
 import { useSelector } from "react-redux";
 
 const AllExpensesScreen = () => {
   const expenses = useSelector((state) => state.expense.expenses);
+
+  function renderExpenses({ item }) {
+    return <Expense key={item.title} title={item.title} cost={item.cost} />;
+  }
   return (
     <View style={styles.screen}>
-      {expenses.map((expense) => {
-        return (
-          <Expense
-            key={expense.title}
-            title={expense.title}
-            cost={expense.cost}
-          />
-        );
-      })}
+      <FlatList
+        data={expenses}
+        keyExtractor={(expense) => expense.title}
+        renderItem={renderExpenses}
+      />
     </View>
   );
 };
