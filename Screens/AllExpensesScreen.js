@@ -7,7 +7,14 @@ const AllExpensesScreen = () => {
   const expenses = useSelector((state) => state.expense.expenses);
 
   function renderExpenses({ item }) {
-    return <Expense key={item.title} title={item.title} cost={item.cost} />;
+    return (
+      <Expense
+        key={item.title}
+        title={item.title}
+        cost={item.cost}
+        date={item.date}
+      />
+    );
   }
   return (
     <View style={styles.screen}>

@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { GlobalStyles } from "../Constants/styles";
 import { useNavigation } from "@react-navigation/native";
 
-const Expense = ({ title, cost }) => {
+const Expense = ({ title, cost, date }) => {
   const navigation = useNavigation();
 
   function pressHandller() {
@@ -11,7 +11,14 @@ const Expense = ({ title, cost }) => {
   }
   return (
     <Pressable style={styles.container} onPress={pressHandller}>
-      <Text style={styles.text}>{title}</Text>
+      <View>
+        <Text style={styles.text}>{title}</Text>
+
+        <Text style={styles.date}>
+          {date.getDate()}--{date.getMonth() === 0 ? "12" : date.getMonth()}--{" "}
+          {date.getMonth() === 0 ? date.getFullYear() - 1 : date.getFullYear()}
+        </Text>
+      </View>
       <Text style={styles.text}>{cost}</Text>
     </Pressable>
   );
@@ -32,6 +39,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 16,
+    fontSize: 18,
+  },
+  date: {
+    fontSize: 10,
+    color: "#dfdede",
   },
 });
