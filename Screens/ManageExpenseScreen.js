@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, TextInput, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -7,14 +7,14 @@ import { addExpense, editExpense, removeExpense } from "../Store/ExpensesSlice";
 const ManageExpenseScreen = ({ route }) => {
   const [title, setTitle] = useState();
   const [cost, setCost] = useState();
+  const [date, setDate] = useState(null);
   const [expense, setExpense] = useState(null);
   const [isNew, setIsNew] = useState(true);
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   function cancelHandler() {
-    console.log("t:", title);
-    console.log("c:", cost);
     navigation.goBack();
   }
 
@@ -25,20 +25,27 @@ const ManageExpenseScreen = ({ route }) => {
 
   function editHandler() {
     navigation.goBack();
-    dispatch(editExpense({ oldExpense: expense, newExpense: { title, cost } }));
+    dispatch(
+      editExpense({ oldExpense: expense, newExpense: { title, cost, date } })
+    );
   }
 
   function addExpenseHandler() {
     navigation.goBack();
-    dispatch(addExpense({ title, cost }));
+    dispatch(addExpense({ title, cost, date }));
   }
 
   useEffect(() => {
     if (route.params) {
       setIsNew(false);
-      setExpense({ title: route.params.title, cost: route.params.cost });
+      setExpense({
+        title: route.params.title,
+        cost: route.params.cost,
+        date: route.params.date,
+      });
       setTitle(route.params.title);
       setCost(route.params.cost);
+      setDate(route.params.date);
     }
   }, []);
 
@@ -46,18 +53,38 @@ const ManageExpenseScreen = ({ route }) => {
     <>
       <View style={styles.container}>
         <View style={styles.inputContainer}>
+          <View style={styles.innerContainer}>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={(newCost) => setCost(newCost)}
+              placeholder="Cost"
+            >
+              {cost}
+            </TextInput>
+            <TextInput
+              style={styles.input}
+              onChangeText={(date) => setDate(date)}
+              placeholder="YYYY-MM-DD"
+              maxLength={10}
+            >
+              {expense
+                ? `${
+                    date.getMonth() === 0
+                      ? date.getFullYear() - 1
+                      : date.getFullYear()
+                  }-${
+                    date.getMonth() === 0 ? "12" : date.getMonth()
+                  }-${date.getDate()}`
+                : null}
+            </TextInput>
+          </View>
           <TextInput
-            style={[styles.input, { width: "70%" }]}
+            style={styles.input}
             onChangeText={(newTitle) => setTitle(newTitle)}
+            placeholder="Title"
           >
             {title}
-          </TextInput>
-          <TextInput
-            style={[styles.input, { width: "20%" }]}
-            keyboardType="numeric"
-            onChangeText={(newCost) => setCost(newCost)}
-          >
-            {cost}
           </TextInput>
         </View>
         <View style={styles.buttonContainer}>
@@ -83,10 +110,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     width: "80%",
+    height: "60%",
+  },
+  innerContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
   },
   input: {
+    flex: 1,
     height: 40,
     marginHorizontal: 10,
     borderRadius: 8,

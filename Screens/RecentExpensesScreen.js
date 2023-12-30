@@ -1,11 +1,22 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Expense from "../Component/Expense";
 import { useSelector } from "react-redux";
+import Overview from "../Component/Overview";
+import { GlobalStyles } from "../Constants/styles";
 
 const currentDate = new Date();
 const AllExpensesScreen = () => {
   const expenses = useSelector((state) => state.expense.expenses);
+  const [totalCost, setTotalCost] = useState();
+
+  useEffect(() => {
+    let total = 0;
+    RecentExpenses.map((recentExpense) => {
+      return (total += +recentExpense.cost);
+    });
+    setTotalCost(total);
+  }, []);
 
   function renderExpenses({ item }) {
     return (
@@ -27,6 +38,7 @@ const AllExpensesScreen = () => {
 
   return (
     <View style={styles.screen}>
+      <Overview message="Last 7 days" totalCost={totalCost} />
       <FlatList
         data={RecentExpenses}
         keyExtractor={(expense) => expense.title}
@@ -43,6 +55,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    marginTop: 30,
+    paddingTop: 30,
+    backgroundColor: GlobalStyles.colors.primary700,
   },
 });

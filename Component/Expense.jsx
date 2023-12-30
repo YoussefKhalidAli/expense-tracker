@@ -1,48 +1,81 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { GlobalStyles } from "../Constants/styles";
 import { useNavigation } from "@react-navigation/native";
 
-const Expense = ({ title, cost, date }) => {
+import { GlobalStyles } from "../Constants/styles";
+
+function ExpenseItem({ title, cost, date }) {
   const navigation = useNavigation();
 
-  function pressHandller() {
-    navigation.navigate("ManageExpenses", { title, cost });
+  function expensePressHandler() {
+    navigation.navigate("ManageExpenses", {
+      title,
+      cost,
+      date,
+    });
   }
-  return (
-    <Pressable style={styles.container} onPress={pressHandller}>
-      <View>
-        <Text style={styles.text}>{title}</Text>
 
-        <Text style={styles.date}>
-          {date.getDate()}--{date.getMonth() === 0 ? "12" : date.getMonth()}--{" "}
-          {date.getMonth() === 0 ? date.getFullYear() - 1 : date.getFullYear()}
-        </Text>
+  return (
+    <Pressable
+      onPress={expensePressHandler}
+      style={({ pressed }) => pressed && styles.pressed}
+    >
+      <View style={styles.expenseItem}>
+        <View>
+          <Text style={[styles.textBase, styles.description]}>{title}</Text>
+          <Text style={styles.textBase}>
+            {date.getDate()}--{date.getMonth() === 0 ? "12" : date.getMonth()}--{" "}
+            {date.getMonth() === 0
+              ? date.getFullYear() - 1
+              : date.getFullYear()}
+          </Text>
+        </View>
+        <View style={styles.amountContainer}>
+          <Text style={styles.amount}>{cost}</Text>
+        </View>
       </View>
-      <Text style={styles.text}>{cost}</Text>
     </Pressable>
   );
-};
+}
 
-export default Expense;
+export default ExpenseItem;
 
 const styles = StyleSheet.create({
-  container: {
+  pressed: {
+    opacity: 0.75,
+  },
+  expenseItem: {
+    padding: 12,
+    marginVertical: 8,
+    backgroundColor: GlobalStyles.colors.primary500,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    borderRadius: 6,
+    elevation: 3,
+    shadowColor: GlobalStyles.colors.gray500,
+    shadowRadius: 4,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.4,
+  },
+  textBase: {
+    color: GlobalStyles.colors.primary50,
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 4,
+    fontWeight: "bold",
+  },
+  amountContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    marginLeft: "25%",
+    backgroundColor: "white",
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: GlobalStyles.colors.primary400,
-    width: "80%",
-    height: 60,
-    marginBottom: 15,
-    borderRadius: 8,
+    borderRadius: 4,
+    minWidth: 80,
   },
-  text: {
-    color: "white",
-    fontSize: 18,
-  },
-  date: {
-    fontSize: 10,
-    color: "#dfdede",
+  amount: {
+    color: GlobalStyles.colors.primary500,
+    fontWeight: "bold",
   },
 });

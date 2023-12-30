@@ -4,14 +4,16 @@ const ExpensesSlice = createSlice({
   name: "expenses",
   initialState: {
     expenses: [],
+    totalCost: 0,
   },
   reducers: {
     addExpense(state, { payload }) {
       state.expenses.push({
         title: payload.title,
         cost: payload.cost,
-        date: new Date(),
+        date: new Date(payload.date),
       });
+      state.totalCost += +payload.cost;
     },
 
     removeExpense(state, { payload }) {
@@ -21,6 +23,7 @@ const ExpensesSlice = createSlice({
         ),
         1
       );
+      state.totalCost -= payload.cost;
     },
 
     editExpense(state, { payload }) {
