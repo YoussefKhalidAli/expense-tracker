@@ -11,7 +11,7 @@ const ExpensesSlice = createSlice({
       state.expenses.push({
         title: payload.title,
         cost: payload.cost,
-        date: new Date(payload.date),
+        date: payload.date,
       });
       state.totalCost += +payload.cost;
     },

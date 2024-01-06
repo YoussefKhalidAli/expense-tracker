@@ -1,7 +1,9 @@
+// Imported styles
+import { GlobalStyles } from "../Constants/styles";
+
+// Imported tools
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
-import { GlobalStyles } from "../Constants/styles";
 
 function ExpenseItem({ title, cost, date }) {
   const navigation = useNavigation();

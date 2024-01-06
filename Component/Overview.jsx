@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+// Imported styles
 import { GlobalStyles } from "../Constants/styles";
+
+// Imported tools
+import { StyleSheet, Text, View } from "react-native";
 
 const Overview = ({ message, totalCost }) => {
   return (

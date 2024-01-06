@@ -1,16 +1,25 @@
+// Imported styles
+import { GlobalStyles } from "./Constants/styles";
+
+// Store
+import { store } from "./Store/Store";
+
+// Imported tools
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
-import AllExpensesScreen from "./Screens/AllExpensesScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import RecentExpensesScreen from "./Screens/RecentExpensesScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import IconButton from "./Component/IconButton";
-import ManageExpenseScreen from "./Screens/ManageExpenseScreen";
 import { Provider } from "react-redux";
-import { store } from "./Store/Store";
-import { GlobalStyles } from "./Constants/styles";
 import { Ionicons } from "@expo/vector-icons";
+
+// Imported components
+import IconButton from "./Component/IconButton";
+
+// Imported screens
+import RecentExpensesScreen from "./Screens/RecentExpensesScreen";
+import AllExpensesScreen from "./Screens/AllExpensesScreen";
+import ManageExpenseScreen from "./Screens/ManageExpenseScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,30 +37,34 @@ export default function App() {
           name="AllExpenses"
           component={AllExpensesScreen}
           options={{
-            tabBarIcon: () => {
+            tabBarIcon: ({ color }) => {
               return (
                 <Ionicons
                   name="calendar-outline"
                   size={32}
-                  color={GlobalStyles.colors.accent500}
+                  color={color}
                 ></Ionicons>
               );
             },
+            tabBarActiveTintColor: GlobalStyles.colors.accent500,
+            tabBarInactiveTintColor: GlobalStyles.colors.primary800,
           }}
         />
         <Tab.Screen
           name="RecentExpenses"
           component={RecentExpensesScreen}
           options={{
-            tabBarIcon: () => {
+            tabBarIcon: ({ color }) => {
               return (
                 <Ionicons
                   name="hourglass-outline"
                   size={32}
-                  color={GlobalStyles.colors.accent500}
+                  color={color}
                 ></Ionicons>
               );
             },
+            tabBarActiveTintColor: GlobalStyles.colors.accent500,
+            tabBarInactiveTintColor: GlobalStyles.colors.primary800,
           }}
         />
       </Tab.Navigator>
@@ -60,7 +73,7 @@ export default function App() {
 
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator
@@ -74,11 +87,19 @@ export default function App() {
             <Stack.Screen
               name="TabsOverview"
               component={TabNavigation}
-              options={{
+              options={({ navigation }) => ({
                 headerRight: () => {
-                  return <IconButton icon="add" color="white" />;
+                  return (
+                    <IconButton
+                      icon="add"
+                      color="white"
+                      onPress={() => {
+                        navigation.navigate("ManageExpenses");
+                      }}
+                    />
+                  );
                 },
-              }}
+              })}
             />
             <Stack.Screen
               name="ManageExpenses"

@@ -1,9 +1,14 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import Expense from "../Component/Expense";
-import { useSelector } from "react-redux";
-import Overview from "../Component/Overview";
+// Imported styles
 import { GlobalStyles } from "../Constants/styles";
+
+// Imported tools
+import { FlatList, StyleSheet, View } from "react-native";
+import React from "react";
+import { useSelector } from "react-redux";
+
+// Imported components
+import Expense from "../Component/Expense";
+import Overview from "../Component/Overview";
 
 const AllExpensesScreen = () => {
   const expenses = useSelector((state) => state.expense.expenses);

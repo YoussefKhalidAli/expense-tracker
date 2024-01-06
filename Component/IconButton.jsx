@@ -1,15 +1,11 @@
+// Imported tools
 import { Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
-function IconButton({ icon, color }) {
-  const navigation = useNavigation();
-  const showAddExpenseScreen = () => {
-    navigation.navigate("ManageExpenses");
-  };
+function IconButton({ icon, color, onPress }) {
   return (
     <Pressable
-      onPress={showAddExpenseScreen}
+      onPress={onPress}
       style={({ pressed }) => pressed && styles.pressed}
     >
       <Ionicons name={icon} size={36} color={color} />

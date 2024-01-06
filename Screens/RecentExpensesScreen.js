@@ -1,9 +1,14 @@
+// Imported styles
+import { GlobalStyles } from "../Constants/styles";
+
+// Imported tools
 import { FlatList, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import Expense from "../Component/Expense";
 import { useSelector } from "react-redux";
+
+// Imported components
+import Expense from "../Component/Expense";
 import Overview from "../Component/Overview";
-import { GlobalStyles } from "../Constants/styles";
 
 const currentDate = new Date();
 const AllExpensesScreen = () => {
