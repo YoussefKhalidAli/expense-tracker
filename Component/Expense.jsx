@@ -5,7 +5,7 @@ import { GlobalStyles } from "../Constants/styles";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-function ExpenseItem({ title, cost, date }) {
+function ExpenseItem({ title, cost, date, id }) {
   const navigation = useNavigation();
 
   function expensePressHandler() {
@@ -13,6 +13,7 @@ function ExpenseItem({ title, cost, date }) {
       title,
       cost,
       date,
+      id,
     });
   }
 

@@ -1,8 +1,9 @@
 // Imported styles
 import { GlobalStyles } from "../Constants/styles";
 
-// Store
+// Data management
 import { addExpense, editExpense, removeExpense } from "../Store/ExpensesSlice";
+import { deleteExpense, postExpense, updateExpense } from "../util/http";
 
 // Imported tools
 import { Button, StyleSheet, TextInput, View, Alert } from "react-native";
@@ -30,16 +31,21 @@ const ManageExpenseScreen = ({ route }) => {
   function deleteHandler() {
     navigation.goBack();
     dispatch(removeExpense(expense));
+    deleteExpense(expense.id);
   }
 
   function editHandler() {
     navigation.goBack();
     dispatch(
-      editExpense({ oldExpense: expense, newExpense: { title, cost, date } })
+      editExpense({
+        oldExpense: expense,
+        newExpense: { title, cost, date, id: expense.id },
+      })
     );
+    updateExpense(expense.id, { title, cost, date });
   }
 
-  function confirmHandler() {
+  async function confirmHandler() {
     const titleIsValid = title === null ? false : title.trim().length > 0;
     const costIsValid = cost === null ? false : !isNaN(cost) && cost > 0;
     const dateIsValid =
@@ -47,7 +53,14 @@ const ManageExpenseScreen = ({ route }) => {
     Errors.current = [];
     if (titleIsValid && costIsValid && dateIsValid) {
       navigation.goBack();
-      dispatch(addExpense({ title, cost, date: new Date(date) }));
+      dispatch(
+        addExpense({
+          title,
+          cost,
+          date: new Date(date),
+          id: await postExpense({ title, cost, date: new Date(date) }),
+        })
+      );
       return;
     }
     if (!titleIsValid) {
@@ -69,6 +82,7 @@ const ManageExpenseScreen = ({ route }) => {
         title: route.params.title,
         cost: route.params.cost,
         date: route.params.date,
+        id: route.params.id,
       });
       setTitle(route.params.title);
       setCost(route.params.cost);
@@ -119,8 +133,7 @@ const ManageExpenseScreen = ({ route }) => {
           ]}
           onChangeText={(newTitle) => setTitle(newTitle)}
           maxLength={20}
-          multiline={true}
-          textAlignVertical="top"
+          placeholder="Title"
         >
           {title}
         </TextInput>
@@ -162,7 +175,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "90%",
     alignItems: "center",
-    height: "60%",
+    height: "20%",
   },
   innerContainer: {
     flexDirection: "row",
@@ -170,7 +183,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    maxHeight: 40,
     width: "100%",
     marginHorizontal: 1,
     paddingHorizontal: 4,
@@ -180,10 +193,9 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 24,
     backgroundColor: GlobalStyles.colors.primary100,
-    maxWidth: "100%",
   },
   titleInput: {
-    maxHeight: "60%",
+    height: 10,
   },
   buttons: {
     flexDirection: "row",

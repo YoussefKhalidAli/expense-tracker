@@ -46,7 +46,7 @@ const AllExpensesScreen = () => {
       <Overview message="Last 7 days" totalCost={totalCost} />
       <FlatList
         data={RecentExpenses}
-        keyExtractor={(expense) => expense.title}
+        keyExtractor={(expense) => expense.id}
         renderItem={renderExpenses}
         render
       />

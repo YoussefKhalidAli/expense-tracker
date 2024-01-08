@@ -1,7 +1,7 @@
 // Imported styles
 import { GlobalStyles } from "./Constants/styles";
 
-// Store
+// Data management
 import { store } from "./Store/Store";
 
 // Imported tools

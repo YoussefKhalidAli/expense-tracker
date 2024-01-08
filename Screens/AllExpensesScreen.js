@@ -1,26 +1,39 @@
 // Imported styles
 import { GlobalStyles } from "../Constants/styles";
 
+// Data managament
+import { setExpenses } from "../Store/ExpensesSlice";
+import { getExpenses } from "../util/http";
+
 // Imported tools
 import { FlatList, StyleSheet, View } from "react-native";
-import React from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // Imported components
 import Expense from "../Component/Expense";
 import Overview from "../Component/Overview";
 
 const AllExpensesScreen = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    async function fetchExpenses() {
+      const expenses = await getExpenses();
+      dispatch(setExpenses(expenses));
+    }
+    fetchExpenses();
+  }, []);
   const expenses = useSelector((state) => state.expense.expenses);
   const totalCost = useSelector((state) => state.expense.totalCost);
 
   function renderExpenses({ item }) {
     return (
       <Expense
-        key={item.title}
+        key={item.id}
         title={item.title}
         cost={item.cost}
         date={item.date}
+        id={item.id}
       />
     );
   }
@@ -29,7 +42,7 @@ const AllExpensesScreen = () => {
       <Overview message="All expenses" totalCost={totalCost} />
       <FlatList
         data={expenses}
-        keyExtractor={(expense) => expense.title}
+        keyExtractor={(expense) => expense.id}
         renderItem={renderExpenses}
       />
     </View>
